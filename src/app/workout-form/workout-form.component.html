@@ -1,15 +1,27 @@
-<form (ngSubmit)="onSubmit()">
-     <div>
-       <label for="userName">User Name:</label>
-       <input id="userName" [(ngModel)]="userName" name="userName" required>
-     </div>
-     <div>
-       <label for="workoutType">Workout Type:</label>
-       <input id="workoutType" [(ngModel)]="workoutType" name="workoutType" required>
-     </div>
-     <div>
-       <label for="workoutMinutes">Workout Minutes:</label>
-       <input id="workoutMinutes" type="number" [(ngModel)]="workoutMinutes" name="workoutMinutes" required>
-     </div>
-     <button type="submit">Add Workout</button>
-   </form>
+<form #form="ngForm" (ngSubmit)="onSubmit(form)" class="flex flex-col items-center bg-gray-100 p-5 rounded-lg shadow-md max-w-md mx-auto mt-20" aria-label="Workout Form">
+  <mat-form-field appearance="fill" class="mb-4 w-full">
+    <mat-label>User Name</mat-label>
+    <input matInput [(ngModel)]="userName" name="userName" required placeholder="Enter your name" aria-label="User Name" class="w-full p-2 border border-gray-300 rounded">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="mb-4 w-full">
+    <mat-label>Workout Type</mat-label>
+    <mat-select [(ngModel)]="workoutType" name="workoutType" required aria-label="Workout Type" class="w-full p-2 rounded">
+      <mat-option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="mb-4 w-full">
+    <mat-label>Workout Minutes</mat-label>
+    <input matInput type="number" [(ngModel)]="workoutMinutes" name="workoutMinutes" required placeholder="Enter workout minutes" aria-label="Workout Minutes" class="w-full p-2 border border-gray-300 rounded">
+  </mat-form-field>
+
+  <div class="flex justify-between w-full">
+    <button mat-raised-button color="primary" type="submit" class="bg-green-500 text-white py-2 px-4 rounded cursor-pointer text-lg hover:bg-green-600">
+      Add Workout
+    </button>
+    <button mat-raised-button color="warn" type="button" (click)="resetForm()" class="bg-red-500 text-white py-2 px-4 rounded cursor-pointer text-lg hover:bg-red-600">
+      Reset
+    </button>
+  </div>
+</form>

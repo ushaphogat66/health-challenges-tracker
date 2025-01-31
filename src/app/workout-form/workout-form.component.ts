@@ -1,26 +1,81 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { User, Workout } from '../models/user.model';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-workout-form',
   templateUrl: './workout-form.component.html',
   styleUrls: ['./workout-form.component.css'],
-  imports: [FormsModule]
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    CommonModule
+  ]
 })
-export class WorkoutFormComponent {
-  @Output() addUser = new EventEmitter<User>();
+export class WorkoutFormComponent implements OnInit {
   userName: string = '';
   workoutType: string = '';
   workoutMinutes: number = 0;
+  workoutTypes: string[] = ['Cardio', 'Strength', 'Flexibility', 'Balance', 'Endurance'];
 
-  onSubmit() {
-    const newUser: User = {
-      id: Date.now(), // Unique ID
-      name: this.userName,
-      workouts: [{ type: this.workoutType, minutes: this.workoutMinutes }]
-    };
-    this.addUser.emit(newUser);
+  userData = [
+    {
+      id: 1,
+      name: 'John Doe',
+      workouts: [
+        { type: 'Running', minutes: 30 },
+        { type: 'Cycling', minutes: 45 }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      workouts: [
+        { type: 'Swimming', minutes: 60 },
+        { type: 'Running', minutes: 20 }
+      ]
+    },
+    {
+      id: 3,
+      name: 'Mike Johnson',
+      workouts: [
+        { type: 'Yoga', minutes: 50 },
+        { type: 'Cycling', minutes: 40 }
+      ]
+    }
+  ];
+
+  ngOnInit() {
+    const storedData = localStorage.getItem('userData');
+    if (storedData) {
+      this.userData = JSON.parse(storedData);
+    }
+  }
+
+  onSubmit(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+    const user = this.userData.find(u => u.name === this.userName);
+    if (user) {
+      user.workouts.push({ type: this.workoutType, minutes: this.workoutMinutes });
+    } else {
+      const newUser = {
+        id: this.userData.length + 1,
+        name: this.userName,
+        workouts: [{ type: this.workoutType, minutes: this.workoutMinutes }]
+      };
+      this.userData.push(newUser);
+    }
+    localStorage.setItem('userData', JSON.stringify(this.userData));
     this.resetForm();
   }
 
