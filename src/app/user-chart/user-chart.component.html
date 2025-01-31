@@ -1,0 +1,6 @@
+<div>
+  <mat-tab-group (selectedTabChange)="selectUser(userData[$event.index])">
+    <mat-tab *ngFor="let user of userData" [label]="user.name"></mat-tab>
+  </mat-tab-group>
+  <canvas id="canvas"></canvas>
+</div>

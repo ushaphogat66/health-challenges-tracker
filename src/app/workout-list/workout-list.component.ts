@@ -1,14 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-workout-list',
   templateUrl: './workout-list.component.html',
   styleUrls: ['./workout-list.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatInputModule,
+    MatSelectModule
+  ]
 })
+
+
+
 export class WorkoutListComponent implements OnInit {
   userData: User[] = [];
   filteredData: User[] = [];
@@ -16,6 +30,8 @@ export class WorkoutListComponent implements OnInit {
   selectedWorkoutType: string = '';
   itemsPerPage: number = 5;
   currentPage: number = 1;
+  
+  displayedColumns: string[] = ['name', 'workouts',  'numWorkouts', 'minutes'];
 
   ngOnInit() {
     this.loadData();
@@ -27,12 +43,6 @@ export class WorkoutListComponent implements OnInit {
     this.filteredData = [...this.userData];
   }
 
-  onAddUser(newUser: User) {
-    this.userData.push(newUser);
-    localStorage.setItem('userData', JSON.stringify(this.userData));
-    this.filteredData = [...this.userData];
-  }
-
   onSearch() {
     this.filteredData = this.userData.filter(user =>
       user.name.toLowerCase().includes(this.searchName.toLowerCase())
@@ -41,7 +51,7 @@ export class WorkoutListComponent implements OnInit {
 
   onFilter() {
     this.filteredData = this.userData.filter(user =>
-      user.workouts.some(workout => workout.type === this.selectedWorkoutType)
+      this.selectedWorkoutType === '' || user.workouts.some(workout => workout.type === this.selectedWorkoutType)
     );
   }
 
@@ -51,17 +61,23 @@ export class WorkoutListComponent implements OnInit {
     return this.filteredData.slice(start, end);
   }
 
-  changePage(page: number) {
-    this.currentPage = page;
+  changePage(event: PageEvent) {
+    this.currentPage = event.pageIndex + 1;
+    this.itemsPerPage = event.pageSize;
   }
 
   getUniqueWorkoutTypes() {
-    // Implement the logic to get unique workout types
-    return [];
+    return [...new Set(this.userData.flatMap(user => user.workouts.map(workout => workout.type)))];
+  }
+   getWorkoutTypes(user: User): string {
+    return user.workouts.map(w => w.type).join(', ');
   }
 
-  getPages() {
-    // Implement the logic to get pages
-    return [];
+  getTotalMinutes(user: User): number {
+    return user.workouts.reduce((sum, w) => sum + w.minutes, 0);
+  }
+
+  getNumberOfWorkouts(user: User): number {
+    return user.workouts.length;
   }
 }
