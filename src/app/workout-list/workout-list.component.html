@@ -1,0 +1,40 @@
+<div>
+     <label for="searchName">Search by Name:</label>
+     <input id="searchName" [(ngModel)]="searchName" (input)="onSearch()">
+   </div>
+   <div>
+     <label for="workoutTypeFilter">Filter by Workout Type:</label>
+     <select id="workoutTypeFilter" [(ngModel)]="selectedWorkoutType" (change)="onFilter()">
+       <option value="">All</option>
+       <option *ngFor="let type of getUniqueWorkoutTypes()" [value]="type">{{ type }}</option>
+     </select>
+   </div>
+   
+   <table>
+     <thead>
+       <tr>
+         <th>User Name</th>
+         <th>Workout Type</th>
+         <th>Minutes</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr *ngFor="let user of paginatedData">
+         <td>{{ user.name }}</td>
+         <td>
+           <ul>
+             <li *ngFor="let workout of user.workouts">{{ workout.type }}</li>
+           </ul>
+         </td>
+         <td>
+           <ul>
+             <li *ngFor="let workout of user.workouts">{{ workout.minutes }}</li>
+           </ul>
+         </td>
+       </tr>
+     </tbody>
+   </table>
+   
+   <div>
+     <button *ngFor="let page of getPages()" (click)="changePage(page)">{{ page }}</button>
+   </div>

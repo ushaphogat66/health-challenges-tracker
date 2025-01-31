@@ -1,0 +1,15 @@
+<form (ngSubmit)="onSubmit()">
+     <div>
+       <label for="userName">User Name:</label>
+       <input id="userName" [(ngModel)]="userName" name="userName" required>
+     </div>
+     <div>
+       <label for="workoutType">Workout Type:</label>
+       <input id="workoutType" [(ngModel)]="workoutType" name="workoutType" required>
+     </div>
+     <div>
+       <label for="workoutMinutes">Workout Minutes:</label>
+       <input id="workoutMinutes" type="number" [(ngModel)]="workoutMinutes" name="workoutMinutes" required>
+     </div>
+     <button type="submit">Add Workout</button>
+   </form>
