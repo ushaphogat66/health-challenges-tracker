@@ -23,10 +23,12 @@ import { CommonModule } from '@angular/common';
 export class WorkoutFormComponent implements OnInit {
   userName: string = '';
   workoutType: string = '';
+  workout: string = ''; // Ensure this line is present
   workoutMinutes: number = 0;
+  availableWorkouts: string[] = [];
   workoutTypes: string[] = ['Cardio', 'Strength', 'Flexibility', 'Balance', 'Endurance'];
 
-  workouts = {
+  workouts: { [key in 'Cardio' | 'Strength' | 'Flexibility' | 'Balance' | 'Endurance']: string[] } = {
     Cardio: ['Running', 'Cycling', 'Swimming', 'Jump Rope'],
     Strength: ['Weight Lifting', 'Bodyweight Exercises', 'Resistance Bands'],
     Flexibility: ['Yoga', 'Stretching', 'Pilates'],
@@ -68,6 +70,10 @@ export class WorkoutFormComponent implements OnInit {
     }
   }
 
+  onWorkoutTypeChange() {
+    this.availableWorkouts = this.workouts[this.workoutType as 'Cardio' | 'Strength' | 'Flexibility' | 'Balance' | 'Endurance'] || [];
+  }
+
   onSubmit(form: NgForm) {
     if (form.invalid) {
       return;
@@ -91,5 +97,6 @@ export class WorkoutFormComponent implements OnInit {
     this.userName = '';
     this.workoutType = '';
     this.workoutMinutes = 0;
+    this.availableWorkouts = [];
   }
 }
