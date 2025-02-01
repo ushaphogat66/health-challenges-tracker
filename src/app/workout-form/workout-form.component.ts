@@ -24,9 +24,9 @@ export class WorkoutFormComponent implements OnInit {
   userName: string = '';
   workoutType: string = '';
   workoutMinutes: number = 0;
-  const workoutTypes: string[] = ['Cardio', 'Strength', 'Flexibility', 'Balance', 'Endurance'];
+  workoutTypes: string[] = ['Cardio', 'Strength', 'Flexibility', 'Balance', 'Endurance'];
 
-  const workouts = {
+  workouts = {
     Cardio: ['Running', 'Cycling', 'Swimming', 'Jump Rope'],
     Strength: ['Weight Lifting', 'Bodyweight Exercises', 'Resistance Bands'],
     Flexibility: ['Yoga', 'Stretching', 'Pilates'],
