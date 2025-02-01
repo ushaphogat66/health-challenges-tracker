@@ -5,24 +5,24 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-workout-list',
   templateUrl: './workout-list.component.html',
   styleUrls: ['./workout-list.component.css'],
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     MatTableModule,
     MatPaginatorModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ]
 })
-
-
-
 export class WorkoutListComponent implements OnInit {
   userData: User[] = [];
   filteredData: User[] = [];
@@ -30,46 +30,50 @@ export class WorkoutListComponent implements OnInit {
   selectedWorkoutType: string = '';
   itemsPerPage: number = 5;
   currentPage: number = 1;
-  
-  displayedColumns: string[] = ['name', 'workouts',  'numWorkouts', 'minutes'];
+  displayedColumns: string[] = ['name', 'workouts', 'numWorkouts', 'minutes'];
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadData();
   }
 
-  loadData() {
+  loadData(): void {
     const data = localStorage.getItem('userData');
     this.userData = data ? JSON.parse(data) : [];
     this.filteredData = [...this.userData];
   }
 
-  onSearch() {
-    this.filteredData = this.userData.filter(user =>
-      user.name.toLowerCase().includes(this.searchName.toLowerCase())
-    );
+  onSearch(): void {
+    this.applyFilters();
   }
 
-  onFilter() {
-    this.filteredData = this.userData.filter(user =>
-      this.selectedWorkoutType === '' || user.workouts.some(workout => workout.type === this.selectedWorkoutType)
-    );
+  onFilter(): void {
+    this.applyFilters();
   }
 
-  get paginatedData() {
+  applyFilters(): void {
+    this.filteredData = this.userData.filter(user =>
+      user.name.toLowerCase().includes(this.searchName.toLowerCase()) &&
+      (this.selectedWorkoutType === '' || user.workouts.some(workout => workout.type === this.selectedWorkoutType))
+    );
+    this.currentPage = 1; // Reset to the first page after filtering
+  }
+
+  get paginatedData(): User[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     return this.filteredData.slice(start, end);
   }
 
-  changePage(event: PageEvent) {
+  changePage(event: PageEvent): void {
     this.currentPage = event.pageIndex + 1;
     this.itemsPerPage = event.pageSize;
   }
 
-  getUniqueWorkoutTypes() {
+  getUniqueWorkoutTypes(): string[] {
     return [...new Set(this.userData.flatMap(user => user.workouts.map(workout => workout.type)))];
   }
-   getWorkoutTypes(user: User): string {
+
+  getWorkoutTypes(user: User): string {
     return user.workouts.map(w => w.type).join(', ');
   }
 
