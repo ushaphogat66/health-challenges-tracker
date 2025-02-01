@@ -3,7 +3,7 @@
   (ngSubmit)="onSubmit(form)"
   class="flex flex-col items-center bg-green-50/95 backdrop-blur-lg p-8 rounded-3xl shadow-2xl max-w-md mx-auto mt-20 border border-green-100 hover:shadow-3xl transition-all duration-500"
   aria-label="Workout Form"
-  style="background: linear-gradient(145deg, rgba(237, 235, 223, 0.95), rgba(230, 255, 230, 0.95));"
+  style="background: linear-gradient(145deg, rgba(238, 229, 178, 0.95), rgba(152, 199, 224, 0.95));"
 >
   <!-- User Name Field -->
   <mat-form-field appearance="fill" class="mb-6 w-full">
@@ -16,7 +16,11 @@
       placeholder="Enter your name"
       aria-label="User Name"
       class="w-full p-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400 bg-white/90"
+      #userNameInput="ngModel"
     />
+    <mat-error *ngIf="userNameInput.invalid && (userNameInput.dirty || userNameInput.touched)">
+      Please enter your name.
+    </mat-error>
   </mat-form-field>
 
   <!-- Workout Type Field -->
@@ -29,9 +33,13 @@
       aria-label="Workout Type"
       class="w-full p-3 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400 bg-white/90"
       (selectionChange)="onWorkoutTypeChange()"
+      #workoutTypeInput="ngModel"
     >
       <mat-option *ngFor="let type of workoutTypes" [value]="type">{{ type }}</mat-option>
     </mat-select>
+    <mat-error *ngIf="workoutTypeInput.invalid && (workoutTypeInput.dirty || workoutTypeInput.touched)">
+      Please select a workout type.
+    </mat-error>
   </mat-form-field>
 
   <!-- Workout Field -->
@@ -43,9 +51,13 @@
       required
       aria-label="Workout"
       class="w-full p-3 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400 bg-white/90"
+      #workoutInput="ngModel"
     >
       <mat-option *ngFor="let workout of availableWorkouts" [value]="workout">{{ workout }}</mat-option>
     </mat-select>
+    <mat-error *ngIf="workoutInput.invalid && (workoutInput.dirty || workoutInput.touched)">
+      Please select a workout.
+    </mat-error>
   </mat-form-field>
 
   <!-- Workout Minutes Field -->
@@ -57,10 +69,15 @@
       [(ngModel)]="workoutMinutes"
       name="workoutMinutes"
       required
+      min="1"
       placeholder="Enter workout minutes"
       aria-label="Workout Minutes"
       class="w-full p-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400 bg-white/90"
+      #workoutMinutesInput="ngModel"
     />
+    <mat-error *ngIf="workoutMinutesInput.invalid && (workoutMinutesInput.dirty || workoutMinutesInput.touched)">
+      Please enter a valid number of minutes.
+    </mat-error>
   </mat-form-field>
 
   <!-- Buttons -->
@@ -70,6 +87,7 @@
       color="primary"
       type="submit"
       class="bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-8 rounded-xl cursor-pointer text-lg font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform"
+      [disabled]="form.invalid"
     >
       Add Workout
     </button>
@@ -84,6 +102,21 @@
     </button>
   </div>
 </form>
+
+<!-- Success Popover -->
+<div *ngIf="showSuccessMessage" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-xl shadow-2xl text-center">
+    <p class="text-lg font-semibold mb-4">Workout has been added!</p>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="navigateToWorkouts()"
+      class="bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-8 rounded-xl cursor-pointer text-lg font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 transform"
+    >
+      Show Workouts
+    </button>
+  </div>
+</div>
 
 <!-- Add custom animations -->
 <style>
@@ -105,5 +138,22 @@
   .hover\:border-gradient:hover {
     border-image: linear-gradient(145deg, rgba(16, 185, 129, 0.8), rgba(5, 150, 105, 0.8));
     border-image-slice: 1;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    form {
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .flex.justify-between {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    button {
+      width: 100%;
+    }
   }
 </style>

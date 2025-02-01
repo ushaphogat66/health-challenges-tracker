@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-workout-form',
@@ -27,6 +28,7 @@ export class WorkoutFormComponent implements OnInit {
   workoutMinutes: number = 0;
   availableWorkouts: string[] = [];
   workoutTypes: string[] = ['Cardio', 'Strength', 'Flexibility', 'Balance', 'Endurance'];
+  showSuccessMessage: boolean = false;
 
   workouts: { [key in 'Cardio' | 'Strength' | 'Flexibility' | 'Balance' | 'Endurance']: string[] } = {
     Cardio: ['Running', 'Cycling', 'Swimming', 'Jump Rope'],
@@ -63,6 +65,8 @@ export class WorkoutFormComponent implements OnInit {
     }
   ];
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     const storedData = localStorage.getItem('userData');
     if (storedData) {
@@ -90,6 +94,7 @@ export class WorkoutFormComponent implements OnInit {
       this.userData.push(newUser);
     }
     localStorage.setItem('userData', JSON.stringify(this.userData));
+    this.showSuccessMessage = true;
     this.resetForm();
   }
 
@@ -98,5 +103,9 @@ export class WorkoutFormComponent implements OnInit {
     this.workoutType = '';
     this.workoutMinutes = 0;
     this.availableWorkouts = [];
+  }
+
+  navigateToWorkouts() {
+    this.router.navigate(['/workout-list']);
   }
 }
