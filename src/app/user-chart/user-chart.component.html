@@ -1,8 +1,12 @@
-<div class="chart-wrapper">
-  <mat-tab-group (selectedTabChange)="selectUser(userData[$event.index])">
-    <mat-tab *ngFor="let user of userData" [label]="user.name"></mat-tab>
-  </mat-tab-group>
-  <div class="chart-container">
-    <canvas id="canvas"></canvas>
+
+  <div class="chart-wrapper">
+    <h2 class="text-2xl font-semibold mb-6 text-center">📊 User Workout Statistics</h2>
+    <mat-tab-group (selectedTabChange)="selectUser(userData[$event.index])" class="tab-group">
+      <mat-tab *ngFor="let user of userData" [label]="user.name"></mat-tab>
+    </mat-tab-group>
+    
+    <div class="chart-container">
+      <canvas id="canvas"></canvas>
+    </div>
   </div>
-</div>
+  

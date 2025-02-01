@@ -40,26 +40,24 @@ export class UserChartComponent implements OnInit {
     if (this.chart) {
       this.chart.destroy();
     }
-  
+
     if (!this.selectedUser) {
       return;
     }
-  
+
     const workoutLabels = this.selectedUser.workouts.map(workout => workout.type);
     const workoutData = this.selectedUser.workouts.map(workout => workout.minutes);
-  
+
     const ctx = document.getElementById('canvas') as HTMLCanvasElement;
-    const gradient = ctx.getContext('2d')!.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(75, 192, 192, 0.8)');
-    gradient.addColorStop(1, 'rgba(75, 192, 192, 0.2)');
-  
-    this.chart = new Chart('canvas', {
+    if (!ctx) return; // Ensures no null reference error
+
+    this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: workoutLabels,
         datasets: [
           {
-            label: 'Minutes',
+            label: 'Minutes Spent',
             data: workoutData,
             backgroundColor: [
               'rgba(255, 99, 132, 0.8)',
@@ -76,13 +74,7 @@ export class UserChartComponent implements OnInit {
               'rgba(153, 102, 255, 1)'
             ],
             borderWidth: 1,
-            borderRadius: {
-              topLeft: 10, // Top-left corner radius
-              topRight: 10, // Top-right corner radius
-              bottomLeft: 0, // Bottom-left corner radius
-              bottomRight: 0 // Bottom-right corner radius
-            },
-            borderSkipped: false, // Apply border radius to all sides
+            borderRadius: 10,
             hoverBackgroundColor: [
               'rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
@@ -100,7 +92,15 @@ export class UserChartComponent implements OnInit {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
+            display: true,
+            position: 'top',
+            labels: {
+              color: '#333',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
+            }
           },
           tooltip: {
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
@@ -116,7 +116,7 @@ export class UserChartComponent implements OnInit {
           },
           title: {
             display: true,
-            text: 'Workout Minutes by Type',
+            text: 'Workout Progress (Minutes Spent)',
             font: {
               size: 18,
               weight: 'bold',
@@ -130,7 +130,7 @@ export class UserChartComponent implements OnInit {
           }
         },
         animation: {
-          duration: 1000,
+          duration: 800,
           easing: 'easeInOutQuad'
         },
         scales: {
