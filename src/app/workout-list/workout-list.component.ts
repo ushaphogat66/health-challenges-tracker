@@ -5,7 +5,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 import { User } from '../models/user.model';
 
 @Component({
@@ -20,7 +21,8 @@ import { User } from '../models/user.model';
     MatPaginatorModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatFormFieldModule,
+    MatCardModule
   ]
 })
 export class WorkoutListComponent implements OnInit {
@@ -55,7 +57,7 @@ export class WorkoutListComponent implements OnInit {
       user.name.toLowerCase().includes(this.searchName.toLowerCase()) &&
       (this.selectedWorkoutType === '' || user.workouts.some(workout => workout.type === this.selectedWorkoutType))
     );
-    this.currentPage = 1; // Reset to the first page after filtering
+    this.currentPage = 1; // Reset to first page after filtering
   }
 
   get paginatedData(): User[] {
