@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NavbarService } from '../services/navbar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,8 +13,10 @@ import { CommonModule } from '@angular/common';
 export class NavbarComponent { 
   showMenu = false;
 
+  constructor(private navbarService: NavbarService) {}
+
   toggleMobileMenu() {
     this.showMenu = !this.showMenu;
-    console.log('showMenu', this.showMenu);
+    this.navbarService.setMenuState(this.showMenu);
   }
 }
